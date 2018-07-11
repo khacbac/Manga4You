@@ -1,0 +1,3 @@
+rootProject.name = 'Manga4You'
+
+include ':app'
