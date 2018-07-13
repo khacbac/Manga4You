@@ -7,7 +7,7 @@ function timeout() {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             reject("time out");
-        }, 5000);
+        }, 10000);
     })
 }
 

@@ -4,122 +4,111 @@
  * @flow
  */
 
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
   Platform,
   StyleSheet,
   Text,
   View,
   TouchableOpacity
-} from 'react-native';
+} from "react-native";
 
-import {
-  createStackNavigator
-} from 'react-navigation';
-
-import Home from './src/js/screen/home/Home';
-import New from './src/js/screen/new/New';
-import Top from './src/js/screen/top/Top';
-import Random from './src/js/screen/random/Random';
-
-const Navigator = createStackNavigator(
-  {
-    Home: {
-      screen: Home
-    },
-    New: {
-      screen: New
-    },
-    Top: {
-      screen: Top
-    },
-    Random: {
-      screen: Random
-    }
-  },
-  {
-    headerMode: 'none',
-    initialRouteName: 'Home'
-  }
-)
+import Home from "./src/js/screen/home/Home";
+import New from "./src/js/screen/new/New";
+import Top from "./src/js/screen/top/Top";
+import FullChap from "./src/js/screen/fullchap/FullChap";
 
 type Props = {};
 export default class App extends Component<Props> {
-
   constructor(props) {
     super(props);
     this.state = {
-      screen: <Home />,
+      screen: null,
       data: [
         {
           screen: "Home",
           title: "Trang chủ",
           isActive: true,
           id: 0,
-          color: 'red'
+          color: "red"
         },
         {
           screen: "Top",
           title: "Xem nhiều",
           isActive: false,
           id: 1,
-          color: 'black'
+          color: "black"
         },
         {
           screen: "New",
           title: "Mới đăng",
           isActive: false,
           id: 2,
-          color: 'black'
+          color: "black"
         },
         {
-          screen: "Random",
-          title: "Ngẫu nhiên",
+          screen: "FullChap",
+          title: "Hoàn thành",
           isActive: false,
           id: 3,
-          color: 'black'
+          color: "black"
         }
       ]
-    }
+    };
+  }
+
+  _navigateToDetailScreen=()=> {
+    this.props.navigation.navigate("DetailScreen");
   }
 
   _renderContentView(type, id) {
+    console.log("main = ", this);
+
     let screen = "";
     switch (type) {
       case "Home":
-        screen = <Home />
-        break
+        screen = <Home main={this} />;
+        break;
       case "Top":
-        screen = <Top />
-        break
+        screen = <Top />;
+        break;
       case "New":
-        screen = <New />
-        break
-      case "Random":
-        screen = <Random />
-        break
+        screen = <New />;
+        break;
+      case "FullChap":
+        screen = <FullChap />;
+        break;
       default:
-        screen = <Home />
-        break
+        screen = <Home />;
+        break;
     }
     this.setState({
       screen: screen,
       data: this.state.data.map(item => {
-        return { ...item, color: item.id === id ? 'red' : 'black' }
+        return { ...item, color: item.id === id ? "red" : "black" };
       })
-    })
+    });
+  }
+
+  componentDidMount() {
+    this._renderContentView("Home", 0);
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <View style={{ backgroundColor: 'yellow', height: 45 }}>
-
-        </View>
+        <View style={{ backgroundColor: "yellow", height: 45 }} />
 
         {this.state.screen}
 
-        <View style={{ backgroundColor: 'yellow', height: 45, flexDirection: 'row', justifyContent: 'space-around' }}>
+        <View
+          style={{
+            backgroundColor: "yellow",
+            height: 45,
+            flexDirection: "row",
+            justifyContent: "space-around"
+          }}
+        >
           {this.state.data.map(item => {
             return (
               <TouchableOpacity
@@ -128,9 +117,8 @@ export default class App extends Component<Props> {
               >
                 <Text style={{ color: item.color }}>{item.title}</Text>
               </TouchableOpacity>
-            )
+            );
           })}
-
         </View>
       </View>
     );
@@ -139,7 +127,6 @@ export default class App extends Component<Props> {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-  },
-
+    flex: 1
+  }
 });
