@@ -12,23 +12,31 @@ import {
 
 import { requestGet } from "./../../http/HttpUtils";
 
+import { connect } from "react-redux";
+
 const { width, height } = Dimensions.get("window");
 
-export default class Home extends Component {
+class Home extends Component {
   constructor(props) {
     super(props);
     this.main = this.props.main;
     this.state = {
       data: []
     };
-    console.log("adadadaddada")
+
+    // console.log("Main => ",this.props.navigation.getParam("item"))
   }
 
   _renderItem = ({ item }) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          this.main._navigateToDetailScreen();
+          this.props.navigation.navigate("DetailScreen");
+          this.props.dispatch({
+            type: "VISIBILITY_FOOTER",
+            footerState: false
+          });
+          console.log("data from store = ", this.props.data);
         }}
         style={{ flex: 1, margin: 5, borderRadius: 10 }}
       >
@@ -72,6 +80,7 @@ export default class Home extends Component {
           keyExtractor={(item, index) => index.toString()}
           numColumns={3}
         />
+
         {this.state.data.length === 0 && (
           <ActivityIndicator
             style={{
@@ -101,6 +110,14 @@ export default class Home extends Component {
     }
   }
 }
+
+mapStateToProps = state => {
+  return {
+    data: state.data
+  };
+};
+
+export default connect(mapStateToProps)(Home);
 
 const styles = StyleSheet.create({
   container: {
