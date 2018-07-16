@@ -17,11 +17,10 @@ const { width, height } = Dimensions.get("window");
 export default class Home extends Component {
   constructor(props) {
     super(props);
-    this.main = this.props.main;
+    this.main = this.props.screenProps;
     this.state = {
       data: []
     };
-    console.log("adadadaddada")
   }
 
   _renderItem = ({ item }) => {
@@ -90,15 +89,17 @@ export default class Home extends Component {
   }
 
   async componentDidMount() {
-    try {
-      let res = await requestGet("https://khac-bac.herokuapp.com/listTruyen/1");
-      let resJson = await res.json();
-      this.setState({
-        data: resJson
-      });
-    } catch (error) {
-      console.log("error == ", error);
-    }
+    // try {
+    //   let res = await requestGet("https://khac-bac.herokuapp.com/listTruyen/1");
+    //   let resJson = await res.json();
+    //   this.setState({
+    //     data: resJson
+    //   });
+    // } catch (error) {
+    //   console.log("error == ", error);
+    // }
+
+    
   }
 }
 

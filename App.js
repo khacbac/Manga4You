@@ -18,6 +18,29 @@ import New from "./src/js/screen/new/New";
 import Top from "./src/js/screen/top/Top";
 import FullChap from "./src/js/screen/fullchap/FullChap";
 
+import { createStackNavigator } from "react-navigation";
+
+const Navigator = createStackNavigator(
+  {
+    Home: {
+      screen: Home
+    },
+    New: {
+      screen: New
+    },
+    Top: {
+      screen: Top
+    },
+    FullChap: {
+      screen: FullChap
+    }
+  },
+  {
+    headerMode: "none",
+    initialRouteName: "Home"
+  }
+);
+
 type Props = {};
 export default class App extends Component<Props> {
   constructor(props) {
@@ -57,7 +80,7 @@ export default class App extends Component<Props> {
     };
   }
 
-  _navigateToDetailScreen=()=> {
+  _navigateToDetailScreen = () => {
     this.props.navigation.navigate("DetailScreen");
   }
 
@@ -99,7 +122,8 @@ export default class App extends Component<Props> {
       <View style={styles.container}>
         <View style={{ backgroundColor: "yellow", height: 45 }} />
 
-        {this.state.screen}
+        {/* {this.state.screen} */}
+        <Navigator screenProps={this} />
 
         <View
           style={{
@@ -113,7 +137,9 @@ export default class App extends Component<Props> {
             return (
               <TouchableOpacity
                 key={item.title}
-                onPress={() => this._renderContentView(item.screen, item.id)}
+                // onPress={() => this._renderContentView(item.screen, item.id)}
+                // onPress={() => this.props.navigation.navigate(item.screen)}
+                onPress={() => console.log("this.refs.navigation", this.refs.navigation)}
               >
                 <Text style={{ color: item.color }}>{item.title}</Text>
               </TouchableOpacity>
