@@ -10,6 +10,7 @@ import {
   StyleSheet,
   Text,
   View,
+  BackHandler,
   TouchableOpacity
 } from "react-native";
 
@@ -18,7 +19,10 @@ import New from "./src/js/screen/new/New";
 import Top from "./src/js/screen/top/Top";
 import FullChap from "./src/js/screen/fullchap/FullChap";
 
+import DetailScreen from "./src/js/screen/detail/DetailSCreen";
+
 import { createStackNavigator } from "react-navigation";
+import { connect } from "react-redux";
 
 const Navigator = createStackNavigator(
   {
@@ -33,6 +37,9 @@ const Navigator = createStackNavigator(
     },
     FullChap: {
       screen: FullChap
+    },
+    DetailScreen: {
+      screen: DetailScreen
     }
   },
   {
@@ -42,79 +49,21 @@ const Navigator = createStackNavigator(
 );
 
 type Props = {};
-export default class App extends Component<Props> {
+class App extends Component<Props> {
   constructor(props) {
     super(props);
-    this.state = {
-      screen: null,
-      data: [
-        {
-          screen: "Home",
-          title: "Trang chủ",
-          isActive: true,
-          id: 0,
-          color: "red"
-        },
-        {
-          screen: "Top",
-          title: "Xem nhiều",
-          isActive: false,
-          id: 1,
-          color: "black"
-        },
-        {
-          screen: "New",
-          title: "Mới đăng",
-          isActive: false,
-          id: 2,
-          color: "black"
-        },
-        {
-          screen: "FullChap",
-          title: "Hoàn thành",
-          isActive: false,
-          id: 3,
-          color: "black"
-        }
-      ]
-    };
   }
 
   _navigateToDetailScreen = () => {
     this.props.navigation.navigate("DetailScreen");
-  }
+  };
 
-  _renderContentView(type, id) {
-    console.log("main = ", this);
-
-    let screen = "";
-    switch (type) {
-      case "Home":
-        screen = <Home main={this} />;
-        break;
-      case "Top":
-        screen = <Top />;
-        break;
-      case "New":
-        screen = <New />;
-        break;
-      case "FullChap":
-        screen = <FullChap />;
-        break;
-      default:
-        screen = <Home />;
-        break;
-    }
-    this.setState({
-      screen: screen,
-      data: this.state.data.map(item => {
-        return { ...item, color: item.id === id ? "red" : "black" };
-      })
+  _naviagteTabScreen(item) {
+    this.refs.navigator._navigation.navigate(item.screen);
+    this.props.dispatch({
+      type: "CHANGE_STATE_FOOTER",
+      id: item.id
     });
-  }
-
-  componentDidMount() {
-    this._renderContentView("Home", 0);
   }
 
   render() {
@@ -122,34 +71,46 @@ export default class App extends Component<Props> {
       <View style={styles.container}>
         <View style={{ backgroundColor: "yellow", height: 45 }} />
 
-        {/* {this.state.screen} */}
-        <Navigator screenProps={this} />
+        <Navigator ref="navigator" main={this} />
 
-        <View
-          style={{
-            backgroundColor: "yellow",
-            height: 45,
-            flexDirection: "row",
-            justifyContent: "space-around"
-          }}
-        >
-          {this.state.data.map(item => {
-            return (
-              <TouchableOpacity
-                key={item.title}
-                // onPress={() => this._renderContentView(item.screen, item.id)}
-                // onPress={() => this.props.navigation.navigate(item.screen)}
-                onPress={() => console.log("this.refs.navigation", this.refs.navigation)}
-              >
-                <Text style={{ color: item.color }}>{item.title}</Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
+        {this.props.footerVisible && (
+          <View
+            style={{
+              backgroundColor: "yellow",
+              height: 45,
+              flexDirection: "row",
+              justifyContent: "space-around"
+            }}
+          >
+            {this.props.footerData.map(item => {
+              return (
+                <TouchableOpacity
+                  key={item.title}
+                  onPress={() => this._naviagteTabScreen(item)}
+                >
+                  <Text style={{ color: item.isActive ? "red" : "black" }}>
+                    {item.title}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        )}
       </View>
     );
   }
 }
+
+mapStateToProps = state => {
+  return {
+    data: state.data,
+    screenState: state.screenState,
+    footerVisible: state.footerVisible,
+    footerData: state.footerData
+  };
+};
+
+export default connect(mapStateToProps)(App);
 
 const styles = StyleSheet.create({
   container: {

@@ -12,22 +12,31 @@ import {
 
 import { requestGet } from "./../../http/HttpUtils";
 
+import { connect } from "react-redux";
+
 const { width, height } = Dimensions.get("window");
 
-export default class Home extends Component {
+class Home extends Component {
   constructor(props) {
     super(props);
     this.main = this.props.screenProps;
     this.state = {
       data: []
     };
+
+    // console.log("Main => ",this.props.navigation.getParam("item"))
   }
 
   _renderItem = ({ item }) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          this.main._navigateToDetailScreen();
+          this.props.navigation.navigate("DetailScreen");
+          this.props.dispatch({
+            type: "VISIBILITY_FOOTER",
+            footerState: false
+          });
+          console.log("data from store = ", this.props.data);
         }}
         style={{ flex: 1, margin: 5, borderRadius: 10 }}
       >
@@ -71,6 +80,7 @@ export default class Home extends Component {
           keyExtractor={(item, index) => index.toString()}
           numColumns={3}
         />
+
         {this.state.data.length === 0 && (
           <ActivityIndicator
             style={{
@@ -89,19 +99,27 @@ export default class Home extends Component {
   }
 
   async componentDidMount() {
-    // try {
-    //   let res = await requestGet("https://khac-bac.herokuapp.com/listTruyen/1");
-    //   let resJson = await res.json();
-    //   this.setState({
-    //     data: resJson
-    //   });
-    // } catch (error) {
-    //   console.log("error == ", error);
-    // }
+    try {
+      let res = await requestGet("https://khac-bac.herokuapp.com/listTruyen/1");
+      let resJson = await res.json();
+      this.setState({
+        data: resJson
+      });
+    } catch (error) {
+      console.log("error == ", error);
+    }
 
     
   }
 }
+
+mapStateToProps = state => {
+  return {
+    data: state.data
+  };
+};
+
+export default connect(mapStateToProps)(Home);
 
 const styles = StyleSheet.create({
   container: {
