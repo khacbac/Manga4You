@@ -10,6 +10,7 @@ import {
   StyleSheet,
   Text,
   View,
+  TextInput,
   BackHandler,
   TouchableOpacity
 } from "react-native";
@@ -24,6 +25,7 @@ import DetailScreen from "./src/js/screen/detail/DetailSCreen";
 import { createStackNavigator } from "react-navigation";
 import { connect } from "react-redux";
 import colors from "./src/res/colors";
+import { requestGet } from "./src/js/http/HttpUtils";
 
 const Navigator = createStackNavigator(
   {
@@ -67,14 +69,19 @@ class App extends Component<Props> {
     });
   }
 
+  componentDidMount() {
+    
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        {this.props.footerVisible &&
+        {this.props.footerVisible && (
           <View style={styles.header}>
             <Text style={styles.headerTxt}>Danh sách truyện</Text>
           </View>
-        }
+        )}
+        
 
         <Navigator ref="navigator" main={this} />
 
@@ -93,7 +100,11 @@ class App extends Component<Props> {
                   key={item.title}
                   onPress={() => this._naviagteTabScreen(item)}
                 >
-                  <Text style={{ color: item.isActive ? colors.colorRed : colors.colorBlack }}>
+                  <Text
+                    style={{
+                      color: item.isActive ? colors.colorRed : colors.colorBlack
+                    }}
+                  >
                     {item.title}
                   </Text>
                 </TouchableOpacity>
@@ -124,12 +135,12 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: colors.colorMain,
     height: 45,
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: "center",
+    alignItems: "center"
   },
   headerTxt: {
     fontSize: 18,
     color: colors.colorRed,
-    fontWeight: 'bold'
+    fontWeight: "bold"
   }
 });

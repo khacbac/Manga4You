@@ -24,7 +24,7 @@ class DetailScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: data
+      data: []
     };
   }
 
@@ -59,22 +59,25 @@ class DetailScreen extends Component {
     );
   }
 
-  // async componentDidMount() {
-  //   try {
-  //     let res = await requestGet(
-  //       "https://khac-bac.herokuapp.com/listChapter/0"
-  //     );
-  //     let resJson = await res.json();
-  //     this.setState({
-  //       data: this.state.data.push(resJson)
-  //     });
-  //   } catch (error) {
-  //     console.log("error == ", error);
-  //   }
-  // }
-
-  componentDidMount() {
+  async componentDidMount() {
     BackHandler.addEventListener("hardwareBackPress", this.handleBackPress);
+    let linkManga = this.props.navigation.getParam("LINK_MANGA","");
+    let urlChapter = linkManga.replace("http://www.nettruyen.com/truyen-tranh/","");
+
+    console.log("urlChapter: ",urlChapter)
+
+     try {
+      let res = await requestGet(
+        "https://khac-bac.herokuapp.com/listChapter/" + urlChapter
+      );
+      let resJson = await res.json();
+      this.setState({
+        data: resJson
+      });
+    } catch (error) {
+      console.log("error == ", error);
+    }
+
   }
 
   componentWillUnmount() {

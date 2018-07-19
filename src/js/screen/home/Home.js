@@ -5,6 +5,7 @@ import {
   Text,
   FlatList,
   Image,
+  TextInput,
   Dimensions,
   ActivityIndicator,
   TouchableOpacity
@@ -31,12 +32,14 @@ class Home extends Component {
     return (
       <TouchableOpacity
         onPress={() => {
-          this.props.navigation.navigate("DetailScreen");
+          this.props.navigation.navigate("DetailScreen", {
+            LINK_MANGA: item.href
+          });
           this.props.dispatch({
             type: "VISIBILITY_FOOTER",
             footerState: false
           });
-          console.log("data from store = ", this.props.data);
+          console.log("data from store = ", item);
         }}
         style={{ flex: 1, margin: 5, borderRadius: 10 }}
       >
@@ -74,6 +77,25 @@ class Home extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <TextInput
+          placeholder="Tìm truyện"
+          onChangeText={text => {
+            if (text.length > 3) {
+              requestGet("http://khac-bac.herokuapp.com/searchmanga/" + text)
+                .then(response => response.json())
+                .then(responseJson => {
+                  this.setState({ data: responseJson });
+                });
+            }
+            if (text === "") {
+              requestGet("https://khac-bac.herokuapp.com/listTruyen/1" + text)
+                .then(response => response.json())
+                .then(responseJson => {
+                  this.setState({ data: responseJson });
+                });
+            }
+          }}
+        />
         <FlatList
           data={this.state.data}
           renderItem={this._renderItem}
@@ -108,8 +130,6 @@ class Home extends Component {
     } catch (error) {
       console.log("error == ", error);
     }
-
-    
   }
 }
 
