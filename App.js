@@ -23,6 +23,7 @@ import DetailScreen from "./src/js/screen/detail/DetailSCreen";
 
 import { createStackNavigator } from "react-navigation";
 import { connect } from "react-redux";
+import colors from "./src/res/colors";
 
 const Navigator = createStackNavigator(
   {
@@ -69,14 +70,18 @@ class App extends Component<Props> {
   render() {
     return (
       <View style={styles.container}>
-        <View style={{ backgroundColor: "yellow", height: 45 }} />
+        {this.props.footerVisible &&
+          <View style={styles.header}>
+            <Text style={styles.headerTxt}>Danh sách truyện</Text>
+          </View>
+        }
 
         <Navigator ref="navigator" main={this} />
 
         {this.props.footerVisible && (
           <View
             style={{
-              backgroundColor: "yellow",
+              backgroundColor: colors.colorMain,
               height: 45,
               flexDirection: "row",
               justifyContent: "space-around"
@@ -88,7 +93,7 @@ class App extends Component<Props> {
                   key={item.title}
                   onPress={() => this._naviagteTabScreen(item)}
                 >
-                  <Text style={{ color: item.isActive ? "red" : "black" }}>
+                  <Text style={{ color: item.isActive ? colors.colorRed : colors.colorBlack }}>
                     {item.title}
                   </Text>
                 </TouchableOpacity>
@@ -115,5 +120,16 @@ export default connect(mapStateToProps)(App);
 const styles = StyleSheet.create({
   container: {
     flex: 1
+  },
+  header: {
+    backgroundColor: colors.colorMain,
+    height: 45,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  headerTxt: {
+    fontSize: 18,
+    color: colors.colorRed,
+    fontWeight: 'bold'
   }
 });
