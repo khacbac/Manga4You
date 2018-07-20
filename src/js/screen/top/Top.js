@@ -13,15 +13,16 @@ import {
 import { requestGet } from "./../../http/HttpUtils";
 
 const { width, height } = Dimensions.get("window");
+import { connect } from 'react-redux';
 
-export default class Top extends Component {
+class Top extends Component {
   constructor(props) {
     super(props);
     this.state = {
       data: [],
-      
+
     };
-    console.log("Main => ",this.props.main)
+    console.log("Main => ", this.props.main)
   }
 
   _renderItem = ({ item }) => {
@@ -62,13 +63,13 @@ export default class Top extends Component {
     return (
       <View style={styles.container}>
         <FlatList
-          data={this.state.data}
+          data={this.props.data}
           renderItem={this._renderItem}
           keyExtractor={(item, index) => index.toString()}
           numColumns={2}
         />
-        
-        {this.state.data.length === 0 && (
+
+        {this.props.data.length === 0 && (
           <ActivityIndicator
             style={{
               position: "absolute",
@@ -85,18 +86,26 @@ export default class Top extends Component {
     );
   }
 
-  async componentDidMount() {
-    try {
-      let res = await requestGet("https://khac-bac.herokuapp.com/listHot");
-      let resJson = await res.json();
-      this.setState({
-        data: resJson
-      });
-    } catch (error) {
-      console.log("error == ", error);
-    }
+  // async componentDidMount() {
+  //   try {
+  //     let res = await requestGet("https://khac-bac.herokuapp.com/listHot");
+  //     let resJson = await res.json();
+  //     this.setState({
+  //       data: resJson
+  //     });
+  //   } catch (error) {
+  //     console.log("error == ", error);
+  //   }
+  // }
+}
+
+mapStateToProp = (state) => {
+  return {
+    data: state.topData
   }
 }
+
+export default connect(mapStateToProp)(Top);
 
 const styles = StyleSheet.create({
   container: {

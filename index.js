@@ -12,6 +12,7 @@ const defaultState = {
   data: 0,
   screenState: "App",
   footerVisible: true,
+  // Danh sách các item bottom footer.
   footerData: [
     {
       screen: "Home",
@@ -41,7 +42,15 @@ const defaultState = {
       id: 3,
       color: "black"
     }
-  ]
+  ],
+  // Lưu trữ toàn bộ  danh sách truyện .
+  homeData: [],
+  // Lưu trữ danh sách truyện xem nhiều.
+  topData: [],
+  // Lưu trữ danh sách truyện mới đăng.
+  newData: [],
+  // Lưu trữ danh sách truyện đã hoàn thành.
+  finishData: [],
 };
 
 const reducer = (state = defaultState, action) => {
@@ -57,6 +66,26 @@ const reducer = (state = defaultState, action) => {
           if (item.id === action.id) return { ...item, isActive: true };
           return { ...item, isActive: false };
         })
+      };
+    case "ADD_HOME_DATA":
+      return {
+        ...state,
+        homeData: [...state.homeData, ...action.data],
+      }
+    case "ADD_TOP_DATA":
+      return {
+        ...state,
+        topData: action.data,
+      };
+    case "ADD_NEW_DATA":
+      return {
+        ...state,
+        newData: action.data,
+      }
+    case "ADD_FINISH_DATA":
+      return {
+        ...state,
+        finishData: action.data,
       };
     default:
       return state;

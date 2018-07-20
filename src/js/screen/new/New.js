@@ -13,9 +13,11 @@ import {
     requestGet
 } from './../../http/HttpUtils';
 
+import { connect } from 'react-redux';
+
 const { width, height } = Dimensions.get('window');
 
-export default class PostNew extends Component {
+class PostNew extends Component {
 
     constructor(props) {
         super(props);
@@ -57,12 +59,12 @@ export default class PostNew extends Component {
         return (
             <View style={styles.container}>
                 <FlatList
-                    data={this.state.data}
+                    data={this.props.data}
                     renderItem={this._renderItem}
                     keyExtractor={(item, index) => index.toString()}
                     numColumns={3}
                 />
-                {this.state.data.length === 0 && <ActivityIndicator
+                {this.props.data.length === 0 && <ActivityIndicator
                     style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
                     size='large'
                     color='cyan'
@@ -71,19 +73,26 @@ export default class PostNew extends Component {
         );
     }
 
-    async componentDidMount() {
-        try {
-            let res = await requestGet("https://khac-bac.herokuapp.com/listPostNew/1");
-            let resJson = await res.json();
-            this.setState({
-                data: resJson
-            })
-        } catch (error) {
-            console.log("error == ", error);
-        }
+    // async componentDidMount() {
+    //     try {
+    //         let res = await requestGet("https://khac-bac.herokuapp.com/listPostNew/1");
+    //         let resJson = await res.json();
+    //         this.setState({
+    //             data: resJson
+    //         })
+    //     } catch (error) {
+    //         console.log("error == ", error);
+    //     }
+    // }
+}
+
+mapStateToProps = (state) => {
+    return {
+        data: state.newData
     }
 }
 
+export default connect(mapStateToProps)(PostNew);
 
 const styles = StyleSheet.create({
     container: {

@@ -21,6 +21,8 @@ import Top from "./src/js/screen/top/Top";
 import FullChap from "./src/js/screen/fullchap/FullChap";
 
 import DetailScreen from "./src/js/screen/detail/DetailSCreen";
+import LoadScreen from "./src/js/screen/loadsceen/LoadScreen";
+
 
 import { createStackNavigator } from "react-navigation";
 import { connect } from "react-redux";
@@ -43,11 +45,14 @@ const Navigator = createStackNavigator(
     },
     DetailScreen: {
       screen: DetailScreen
+    },
+    LoadScreen: {
+      screen: LoadScreen
     }
   },
   {
     headerMode: "none",
-    initialRouteName: "Home"
+    initialRouteName: "LoadScreen"
   }
 );
 
@@ -70,7 +75,7 @@ class App extends Component<Props> {
   }
 
   componentDidMount() {
-    
+
   }
 
   render() {
@@ -81,7 +86,7 @@ class App extends Component<Props> {
             <Text style={styles.headerTxt}>Danh sách truyện</Text>
           </View>
         )}
-        
+
 
         <Navigator ref="navigator" main={this} />
 
@@ -119,7 +124,7 @@ class App extends Component<Props> {
 
 mapStateToProps = state => {
   return {
-    data: state.data,
+    // data: state.data,
     screenState: state.screenState,
     footerVisible: state.footerVisible,
     footerData: state.footerData

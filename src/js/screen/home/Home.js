@@ -14,6 +14,7 @@ import {
 import { requestGet } from "./../../http/HttpUtils";
 
 import { connect } from "react-redux";
+import colors from "../../../res/colors";
 
 const { width, height } = Dimensions.get("window");
 
@@ -22,7 +23,8 @@ class Home extends Component {
     super(props);
     this.main = this.props.screenProps;
     this.state = {
-      data: []
+      index: 1,
+      isLoadMore: false
     };
 
     // console.log("Main => ",this.props.navigation.getParam("item"))
@@ -74,36 +76,40 @@ class Home extends Component {
     );
   };
 
+  onEndReached = () => {
+    this.setState({ isLoadMore: true, index: this.state.index + 1 }, async () => {
+      try {
+        let res = await requestGet("https://khac-bac.herokuapp.com/listTruyen/" + this.state.index);
+        let resJson = await res.json();
+
+        this.props.dispatch({
+          type: "ADD_HOME_DATA",
+          data: resJson
+        });
+      } catch (error) {
+        console.log("error == ", error);
+      }
+    });
+
+
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <TextInput
-          placeholder="Tìm truyện"
-          onChangeText={text => {
-            if (text.length > 3) {
-              requestGet("http://khac-bac.herokuapp.com/searchmanga/" + text)
-                .then(response => response.json())
-                .then(responseJson => {
-                  this.setState({ data: responseJson });
-                });
-            }
-            if (text === "") {
-              requestGet("https://khac-bac.herokuapp.com/listTruyen/1" + text)
-                .then(response => response.json())
-                .then(responseJson => {
-                  this.setState({ data: responseJson });
-                });
-            }
-          }}
-        />
+
         <FlatList
-          data={this.state.data}
+          data={this.props.data}
           renderItem={this._renderItem}
           keyExtractor={(item, index) => index.toString()}
           numColumns={3}
+          onEndReached={this.onEndReached}
+          onEndReachedThreshold={0.5}
         />
 
-        {this.state.data.length === 0 && (
+        {this.state.isLoadMore && <ActivityIndicator size="large" color={colors.colorMain} />}
+
+        {this.props.data.length === 0 && (
           <ActivityIndicator
             style={{
               position: "absolute",
@@ -113,29 +119,29 @@ class Home extends Component {
               bottom: 0
             }}
             size="large"
-            color="cyan"
+            color={colors.colorMain}
           />
         )}
       </View>
     );
   }
 
-  async componentDidMount() {
-    try {
-      let res = await requestGet("https://khac-bac.herokuapp.com/listTruyen/1");
-      let resJson = await res.json();
-      this.setState({
-        data: resJson
-      });
-    } catch (error) {
-      console.log("error == ", error);
-    }
-  }
+  // async componentDidMount() {
+  //   try {
+  //     let res = await requestGet("https://khac-bac.herokuapp.com/listTruyen/1");
+  //     let resJson = await res.json();
+  //     this.setState({
+  //       data: resJson
+  //     });
+  //   } catch (error) {
+  //     console.log("error == ", error);
+  //   }
+  // }
 }
 
 mapStateToProps = state => {
   return {
-    data: state.data
+    data: state.homeData
   };
 };
 
