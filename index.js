@@ -5,6 +5,8 @@ import { createStackNavigator } from "react-navigation";
 
 import DetailScreen from "./src/js/screen/detail/DetailSCreen";
 
+import TestImagePicker from './src/js/screen/test/TestImagePicker';
+
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 
@@ -104,4 +106,4 @@ class AppIndex extends Component {
   }
 }
 
-AppRegistry.registerComponent("Manga4You", () => AppIndex);
+AppRegistry.registerComponent("Manga4You", () => TestImagePicker);
