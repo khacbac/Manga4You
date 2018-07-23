@@ -16,17 +16,18 @@ var options = {
     //   {name: 'fb', title: 'Choose Photo from Facebook'},
     // ],
     storageOptions: {
-      skipBackup: true,
-      path: 'images'
+        skipBackup: true,
+        path: 'images'
     }
-  };
+};
 
 export default class App extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            avatarSource: {}
+            avatarSource: {},
+            base64Img: "default"
         }
     }
 
@@ -50,7 +51,8 @@ export default class App extends Component {
                 // let source = { uri: 'data:image/jpeg;base64,' + response.data };
 
                 this.setState({
-                    avatarSource: source
+                    avatarSource: source,
+                    base64Img: response.data
                 });
             }
         });
@@ -68,6 +70,12 @@ export default class App extends Component {
 
                     <Text>Open Image</Text>
                 </TouchableOpacity>
+
+                <Image
+
+                    style={{ width: 200, height: 200 }}
+                    source={{ uri: `data:image/gif;base64,${this.state.base64Img}` }}
+                />
             </View>
         );
     }

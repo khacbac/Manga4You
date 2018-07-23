@@ -24,7 +24,8 @@ class Home extends Component {
     this.main = this.props.screenProps;
     this.state = {
       index: 1,
-      isLoadMore: false
+      isLoadMore: false,
+      data: []
     };
 
     // console.log("Main => ",this.props.navigation.getParam("item"))
@@ -77,21 +78,24 @@ class Home extends Component {
   };
 
   onEndReached = () => {
-    this.setState({ isLoadMore: true, index: this.state.index + 1 }, async () => {
-      try {
-        let res = await requestGet("https://khac-bac.herokuapp.com/listTruyen/" + this.state.index);
-        let resJson = await res.json();
+    // this.setState({ isLoadMore: true, index: this.state.index + 1 }, async () => {
+    //   try {
+    //     let res = await requestGet("https://khac-bac.herokuapp.com/listTruyen/" + this.state.index);
+    //     let resJson = await res.json();
 
-        this.props.dispatch({
-          type: "ADD_HOME_DATA",
-          data: resJson
-        });
-      } catch (error) {
-        console.log("error == ", error);
-      }
-    });
+    //     // this.props.dispatch({
+    //     //   type: "ADD_HOME_DATA",
+    //     //   data: resJson
+    //     // });
 
+    //     this.setState({
+    //       data: [...this.state.data, ...resJson]
+    //     })
 
+    //   } catch (error) {
+    //     console.log("error == ", error);
+    //   }
+    // });
   }
 
   render() {
@@ -99,7 +103,7 @@ class Home extends Component {
       <View style={styles.container}>
 
         <FlatList
-          data={this.props.data}
+          data={this.state.data}
           renderItem={this._renderItem}
           keyExtractor={(item, index) => index.toString()}
           numColumns={3}
@@ -109,7 +113,7 @@ class Home extends Component {
 
         {this.state.isLoadMore && <ActivityIndicator size="large" color={colors.colorMain} />}
 
-        {this.props.data.length === 0 && (
+        {this.state.data.length === 0 && (
           <ActivityIndicator
             style={{
               position: "absolute",
@@ -124,6 +128,13 @@ class Home extends Component {
         )}
       </View>
     );
+  }
+
+  componentDidMount() {
+    // add data from store.
+    this.setState({
+      data: [...this.state.data, ...this.props.data]
+    })
   }
 
   // async componentDidMount() {

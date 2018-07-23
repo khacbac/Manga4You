@@ -72,7 +72,7 @@ const reducer = (state = defaultState, action) => {
     case "ADD_HOME_DATA":
       return {
         ...state,
-        homeData: [...state.homeData, ...action.data],
+        homeData: [...action.data],
       }
     case "ADD_TOP_DATA":
       return {
@@ -106,4 +106,4 @@ class AppIndex extends Component {
   }
 }
 
-AppRegistry.registerComponent("Manga4You", () => TestImagePicker);
+AppRegistry.registerComponent("Manga4You", () => AppIndex);

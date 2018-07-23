@@ -63,13 +63,13 @@ class Top extends Component {
     return (
       <View style={styles.container}>
         <FlatList
-          data={this.props.data}
+          data={this.state.data}
           renderItem={this._renderItem}
           keyExtractor={(item, index) => index.toString()}
           numColumns={2}
         />
 
-        {this.props.data.length === 0 && (
+        {this.state.data.length === 0 && (
           <ActivityIndicator
             style={{
               position: "absolute",
@@ -85,6 +85,14 @@ class Top extends Component {
       </View>
     );
   }
+
+  componentDidMount() {
+    // add data from store.
+    this.setState({
+      data: [...this.state.data, ...this.props.data]
+    })
+  }
+
 
   // async componentDidMount() {
   //   try {

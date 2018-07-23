@@ -58,18 +58,25 @@ class FullChap extends Component {
         return (
             <View style={styles.container}>
                 <FlatList
-                    data={this.props.data}
+                    data={this.state.data}
                     renderItem={this._renderItem}
                     keyExtractor={(item, index) => index.toString()}
                     numColumns={3}
                 />
-                {this.props.data.length === 0 && <ActivityIndicator
+                {this.state.data.length === 0 && <ActivityIndicator
                     style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
                     size='large'
                     color='cyan'
                 />}
             </View>
         );
+    }
+
+    componentDidMount() {
+        // add data from store.
+        this.setState({
+            data: [...this.state.data, ...this.props.data]
+        })
     }
 
     // async componentDidMount() {
